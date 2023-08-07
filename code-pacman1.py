@@ -16,7 +16,7 @@ speed_x = speed
 speed_y = speed
    
 while True:
-    # Calcula as Regras
+    # Calculate Rules
     x = x + speed_x
     y = y + speed_y
     
@@ -40,7 +40,7 @@ while True:
     pygame.display.update()
     
     
-    # Eventos
+    # Events
     for i in pygame.event.get():
         if i.type == pygame.QUIT:
             exit()
