@@ -48,13 +48,13 @@ class pacman:
         for i in events:
             if i.type == pygame.KEYDOWN:
                 if i.key == pygame.K_RIGHT:
-                    self.speed_x = speed
+                    self.speed_x = -speed
                 elif i.type == pygame.K_LEFT:
                     self.speed_x = -speed
                 elif i.key == pygame.K_UP: 
                     self.speed_y = -speed
                 elif i.key == pygame.K_DOWN:
-                    self.speed_y = speed     
+                    self.speed_y = -speed     
             elif i.type == pygame.KEYUP:
                 if i.key == pygame.K_RIGHT:
                         self.vel_x = 0
