@@ -1,7 +1,16 @@
 
 import pygame
 
-magenta = (255, 0, 255)
+user_color = []
+for i in range(3):
+    color_user = int(input(f" Enter color{i+1}: "))
+    if color_user == 0:
+        color_user_default = [255, 0, 255]
+        user_color.append(color_user)
+    else:
+        user_color.append(color_user_default)
+
+magenta = (user_color[0], user_color[1], user_color[2])
 black = (0, 0, 0)
 speed = 1
 radius = 30
