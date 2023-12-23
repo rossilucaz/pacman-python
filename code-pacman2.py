@@ -8,7 +8,7 @@ magenta = (255, 0, 255)
 black = (0, 0, 0)
 
 class pacman:
-    def __init__(self):
+    def __init__(self): 
         self.center_x = 400
         self.center_y = 300 
         self.size = 100
