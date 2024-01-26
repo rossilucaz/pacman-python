@@ -4,6 +4,8 @@ pygame.init()
 
 screen_size = pygame.display.set_mode((800, 600), 0)
 
+font = pygame.font.SysFont("arial", 24, True, False)
+
 magenta = (255, 0, 255)
 yellow = (255, 255, 0)
 blue = (0, 0, 255)
@@ -11,8 +13,10 @@ black = (0, 0, 0)
 speed = 1
 
 class scenario:
-    def __init__(self, size):
+    def __init__(self, size, pac):
+        self.pacman = pac
         self.size = size
+        self.points = 0
         self.matrix = [
             [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
             [2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2],
@@ -44,6 +48,13 @@ class scenario:
             [2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2],
             [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2]
         ]
+        
+        
+    def paint_points(self, screen):
+        points_x = 30 * self.size
+        img_points = font.render(f"Score: {self.points}", True, magenta)
+        screen.blit(img_points, (points_x, 50))        
+        
     def paint_row(self, screen, number_row, row):
         for number_column, column in enumerate(row):
             x = number_column * self.size
@@ -59,7 +70,18 @@ class scenario:
     def paint(self, screen):
         for number_row, row in enumerate(self.matrix):    
             self.paint_row(screen, number_row, row)
-    
+        self.paint_points(screen)
+            
+    def calculate_rule(self):
+        col = self.pacman.column_intention
+        row = self.pacman.row_intention
+        
+        if 0 <= col < 28 and 0 <= row < 29: 
+            if  self.matrix[row][col] !=2:
+                self.pacman.accept_moving()
+                if self.matrix[row][col] == 1:
+                    self.points +=1
+                    self.matrix[row][col] = 0
 
 
 class pacman:
@@ -72,10 +94,12 @@ class pacman:
         self.speed_x = 0
         self.speed_y = 0
         self.radius = self.size // 2
+        self.column_intention = self.column
+        self.row_intention = self.row
         
     def calculate_rules(self):
-        self.column = self.column + self.speed_x 
-        self.row = self.row + self.speed_y
+        self.column_intention = self.column + self.speed_x 
+        self.row_intention = self.row + self.speed_y
         self.center_x = int(self.column * self.size + self.radius)
         self.center_y = int(self.row * self.size + self.radius)
         
@@ -135,16 +159,20 @@ class pacman:
                 self.column = (mouse_x - self.center_x) / delay
                 self.row = (mouse_y - self.center_y) / delay
                               
-    
+    def accept_moving(self):
+        self.row = self.row_intention
+        self.column = self.column_intention
+        
 if __name__ == "__main__":
     size = 600 // 30
     pacman = pacman(size)
-    scenario = scenario(size)
+    scenario = scenario(size, pacman)
     
     while True:
         
         # Calculete Rules
         pacman.calculate_rules()
+        scenario.calculate_rule()
         
         # Screen Paint
         screen_size.fill(black)
